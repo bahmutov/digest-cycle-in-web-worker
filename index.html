@@ -27,7 +27,9 @@
       }
     });
     scope.n = 5000;
-    console.profile('finding primes');
+    // console.timeline('finding primes');
+    setTimeout(function () {
+
     scope.$digest(function afterDigest(scope) {
       var n = scope.n;
       var str = '<ul>';
@@ -36,10 +38,12 @@
       }
       str += '</ul>';
       document.getElementById('primes').innerHTML = str + str + str + str + str;
+      /*
       setTimeout(function () {
-        console.profileEnd('finding primes');
-      }, 0);
+        console.timelineEnd('finding primes');
+      }, 0);*/
     });
+    }, 5000);
   </script>
 </body>
 </html>
