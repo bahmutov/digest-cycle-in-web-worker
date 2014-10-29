@@ -8,24 +8,16 @@
     padding: 10px;
   }
   </style>
-  <script src="micro-angular.js"></script>
-  <script src="primes.js"></script>
 </head>
 
 <body>
   <h1>Digest in web worker</h1>
   <p>Open browser console to see log messages.</p>
   <div id="primes"></div>
+  <script src="mock-scopes.js"></script>
   <script>
-    var worker = new Worker('worker.js');
-    worker.onmessage = function (e) {
-      var str = e.data.html;
-      document.getElementById('primes').innerHTML = str + str + str + str + str;
-    };
-    worker.postMessage({
-      cmd: 'primes',
-      n: 5000
-    });
+    var scope = new Scope();
+    scope.set('foo', 42);
   </script>
 </body>
 </html>
