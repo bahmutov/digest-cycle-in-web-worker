@@ -9,22 +9,25 @@
   }
   </style>
   <script src="micro-angular.js"></script>
+  <script src="primes.js"></script>
 </head>
 
 <body>
   <h1>Digest in web worker</h1>
   <p>Open browser console to see log messages.</p>
   <script>
-    var scope = new Scope('001');
+    var scope = new Scope();
     scope.$watch(function watcherFn(scope) {
-        return scope.foo;
+      return scope.n;
     }, function listenerFn(newValue, oldValue, scope) {
-        if (newValue)
-            console.log('new foo value', newValue);
+      if (newValue) {
+        console.log('finding', newValue, 'primes');
+        console.profile('finding primes');
+        scope.primes = findPrimes(newValue);
+        console.profileEnd('finding primes');
+      }
     });
-    scope.$digest();
-    // nothing happens
-    scope.foo = 42;
+    scope.n = 5000;
     scope.$digest();
   </script>
 </body>
