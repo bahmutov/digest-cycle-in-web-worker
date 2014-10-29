@@ -11,5 +11,11 @@ onmessage = function digestOnMessage(e) {
     case 'set':
       scopes[e.data.id][e.data.name] = e.data.value;
     break;
+    case '$watch':
+      scopes[e.data.id].$watch(
+        eval('(' + e.data.watchFn + ')'),
+        e.data.listenerFn && eval('(' + e.data.listenerFn + ')')
+      );
+    break;
   }
 };

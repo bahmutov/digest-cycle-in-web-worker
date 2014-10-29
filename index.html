@@ -18,6 +18,13 @@
   <script>
     var scope = new Scope();
     scope.set('foo', 42);
+
+    scope.$watch(function (scope) {
+      return scope.foo;
+    }, function (newVal, oldVal, scope) {
+      console.log('new scope.foo', newVal);
+    });
+
   </script>
 </body>
 </html>

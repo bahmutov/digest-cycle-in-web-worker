@@ -23,5 +23,14 @@
     console.log('set mock scope', this.id, 'property', name, '=', value);
   };
 
+  Scope.prototype.$watch = function (watchFn, listenerFn) {
+    digestWorker.postMessage({
+      cmd: '$watch',
+      id: this.id,
+      watchFn: watchFn.toString(),
+      listenerFn: listenerFn && listenerFn.toString()
+    });
+  };
+
   root.Scope = Scope;
 }(this));
