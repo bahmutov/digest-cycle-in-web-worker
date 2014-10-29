@@ -5,7 +5,7 @@
   <title>Digest in web worker</title>
   <style>
   p {
-    padding: 100px;
+    padding: 10px;
   }
   </style>
   <script src="micro-angular.js"></script>
@@ -15,6 +15,7 @@
 <body>
   <h1>Digest in web worker</h1>
   <p>Open browser console to see log messages.</p>
+  <div id="primes"></div>
   <script>
     var scope = new Scope();
     scope.$watch(function watcherFn(scope) {
@@ -22,13 +23,23 @@
     }, function listenerFn(newValue, oldValue, scope) {
       if (newValue) {
         console.log('finding', newValue, 'primes');
-        console.profile('finding primes');
         scope.primes = findPrimes(newValue);
-        console.profileEnd('finding primes');
       }
     });
     scope.n = 5000;
-    scope.$digest();
+    console.profile('finding primes');
+    scope.$digest(function afterDigest(scope) {
+      var n = scope.n;
+      var str = '<ul>';
+      for (k = 0; k < n; k += 1) {
+        str += '<li>' + (k + 1) + ' prime ' + scope.primes[k] + '</li>';
+      }
+      str += '</ul>';
+      document.getElementById('primes').innerHTML = str + str + str + str + str;
+      setTimeout(function () {
+        console.profileEnd('finding primes');
+      }, 0);
+    });
   </script>
 </body>
 </html>

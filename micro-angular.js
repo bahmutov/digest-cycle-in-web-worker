@@ -9,16 +9,18 @@ Scope.prototype.$watch = function(watchFn, listenerFn) {
   this.$$watchers.push(watcher);
 };
 
-Scope.prototype.$digest = function() {
+Scope.prototype.$digest = function(cb) {
   var self = this;
-  this.$$watchers.forEach(function (watch) {
+  var dirty = this.$$watchers.some(function (watch) {
     var newValue = watch.watchFn(self);
     var oldValue = watch.last;
     if (newValue !== oldValue) {
       watch.listenerFn(newValue, oldValue, self);
       watch.last = newValue;
+      return true;
     }
   });
+  dirty && cb && cb(this);
 };
 
 
