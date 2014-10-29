@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Digest in web worker</title>
+  <style>
+  p {
+    padding: 100px;
+  }
+  </style>
+  <script src="micro-angular.js"></script>
+</head>
+
+<body>
+  <h1>Digest in web worker</h1>
+  <p>Open browser console to see log messages.</p>
+  <script>
+    var scope = new Scope('001');
+    scope.$watch(function watcherFn(scope) {
+        return scope.foo;
+    }, function listenerFn(newValue, oldValue, scope) {
+        if (newValue)
+            console.log('new foo value', newValue);
+    });
+    scope.$digest();
+    // nothing happens
+    scope.foo = 42;
+    scope.$digest();
+  </script>
+</body>
+</html>
