@@ -14,6 +14,19 @@
       cmd: 'Scope',
       id: this.id
     });
+
+    var self = this;
+    Object.observe(this, function (changes) {
+      console.log('changed object', self.id, changes);
+      changes.forEach(function (change) {
+        switch (change.type) {
+          case 'add':
+          case 'update':
+            self.set(change.name, change.object[change.name]);
+          break;
+        }
+      });
+    });
     console.log('created mock scope', this.id);
   }
 
@@ -37,11 +50,14 @@
   };
 
   Scope.prototype.$digest = function ($compile) {
-    digestWorker.postMessage({
-      cmd: '$digest',
-      id: this.id,
-      $compile: $compile && $compile.toString()
-    });
+    var self = this;
+    setTimeout(function () {
+      digestWorker.postMessage({
+        cmd: '$digest',
+        id: self.id,
+        $compile: $compile && $compile.toString()
+      });
+    }, 0);
   };
 
   root.Scope = Scope;
