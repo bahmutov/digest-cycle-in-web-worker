@@ -17,5 +17,20 @@ onmessage = function digestOnMessage(e) {
         e.data.listenerFn && eval('(' + e.data.listenerFn + ')')
       );
     break;
+    case '$digest':
+      scopes[e.data.id].$digest(function digestFinished() {
+        var $compile, scope, html;
+        if (e.data.$compile) {
+          $compile = eval('(' + e.data.$compile + ')');
+          scope = scopes[e.data.id];
+          html = $compile(scope);
+        }
+
+        postMessage({
+          cmd: 'digestFinished',
+          html: html
+        });
+      });
+    break;
   }
 };

@@ -13,9 +13,13 @@
 <body>
   <h1>Digest in web worker</h1>
   <p>Open browser console to see log messages.</p>
-  <div id="primes"></div>
+  <div id="foo"></div>
   <script src="mock-scopes.js"></script>
   <script>
+    function render(str) {
+      document.getElementById('foo').innerHTML = str;
+    }
+
     var scope = new Scope();
     scope.set('foo', 42);
 
@@ -23,6 +27,10 @@
       return scope.foo;
     }, function (newVal, oldVal, scope) {
       console.log('new scope.foo', newVal);
+    });
+
+    scope.$digest(function compile(scope) {
+      return '<b>scope.foo = ' + scope.foo + '</b>';
     });
 
   </script>

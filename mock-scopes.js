@@ -2,6 +2,10 @@
 
   var digestWorker = new Worker('./micro-angular-worker.js');
 
+  digestWorker.onmessage = function (e) {
+    root.render && root.render(e.data.html);
+  };
+
   var scopes = 0;
   function Scope() {
     this.id = '$' + scopes;
@@ -29,6 +33,14 @@
       id: this.id,
       watchFn: watchFn.toString(),
       listenerFn: listenerFn && listenerFn.toString()
+    });
+  };
+
+  Scope.prototype.$digest = function ($compile) {
+    digestWorker.postMessage({
+      cmd: '$digest',
+      id: this.id,
+      $compile: $compile && $compile.toString()
     });
   };
 
