@@ -13,24 +13,31 @@
 <body>
   <h1>Digest in web worker</h1>
   <p>Open browser console to see log messages.</p>
-  <div id="foo"></div>
+  <div id="primes"></div>
   <script src="mock-scopes.js"></script>
   <script>
     function render(str) {
-      document.getElementById('foo').innerHTML = str;
+      document.getElementById('primes').innerHTML = str;
     }
 
     var scope = new Scope();
-    scope.set('foo', 42);
+    scope.set('n', 5000);
 
     scope.$watch(function (scope) {
-      return scope.foo;
+      return scope.n;
     }, function (newVal, oldVal, scope) {
-      console.log('new scope.foo', newVal);
+      console.log('finding first', newVal, 'primes');
+      scope.primes = findPrimes(scope.n);
     });
 
     scope.$digest(function compile(scope) {
-      return '<b>scope.foo = ' + scope.foo + '</b>';
+      var n = scope.n;
+      var str = '<ul>';
+      for (k = 0; k < n; k += 1) {
+        str += '<li>' + (k + 1) + ' prime ' + scope.primes[k] + '</li>';
+      }
+      str += '</ul>';
+      return str;
     });
 
   </script>
