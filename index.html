@@ -17,33 +17,15 @@
   <p>Open browser console to see log messages.</p>
   <div id="primes"></div>
   <script>
-    var scope = new Scope();
-    scope.$watch(function watcherFn(scope) {
-      return scope.n;
-    }, function listenerFn(newValue, oldValue, scope) {
-      if (newValue) {
-        console.log('finding', newValue, 'primes');
-        scope.primes = findPrimes(newValue);
-      }
-    });
-    scope.n = 5000;
-    // console.timeline('finding primes');
-    setTimeout(function () {
-
-    scope.$digest(function afterDigest(scope) {
-      var n = scope.n;
-      var str = '<ul>';
-      for (k = 0; k < n; k += 1) {
-        str += '<li>' + (k + 1) + ' prime ' + scope.primes[k] + '</li>';
-      }
-      str += '</ul>';
+    var worker = new Worker('worker.js');
+    worker.onmessage = function (e) {
+      var str = e.data.html;
       document.getElementById('primes').innerHTML = str + str + str + str + str;
-      /*
-      setTimeout(function () {
-        console.timelineEnd('finding primes');
-      }, 0);*/
+    };
+    worker.postMessage({
+      cmd: 'primes',
+      n: 5000
     });
-    }, 5000);
   </script>
 </body>
 </html>
